@@ -25,13 +25,15 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
 - Task (Future, Promise, and std::async)
   - <https://www.modernescpp.com/index.php/tag/tasks>
 - Concurrency and Parallism
+  - Performance Comparison
+    - <https://www.modernescpp.com/index.php/my-conclusion-summation-of-a-vector-in-three-variants>
 - Network
   - Modern Socket Programming
-- Probabilistic Data Structure
-  - Bloom Filter
 - Distributed Hash Table
   - Kademlia
   - Mainline
+- Probabilistic Data Structure
+  - Bloom Filter
 - Build System
   - CMake
   - Conan
