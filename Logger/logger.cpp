@@ -4,6 +4,7 @@
 #include <string>
 
 #include "log_config.h"
+#include "logger_impl.h"
 #include "logger_impl_w.h"
 
 using namespace std;
@@ -43,12 +44,21 @@ int main()
 {
     using namespace mds;
 
-    Logger::GetInstance().Initialize();
+    // Logger::GetInstance().Initialize();
 
-    MDSLog();
+    // MDSLog();
 
-    if (Logger::GetInstance().GetConfig()->type_ == LogType::kVerbose)
-        MDSLog();
+    // if (Logger::GetInstance().GetConfig()->type_ == LogType::kVerbose)
+    //     MDSLog();
+
+    auto config = make_shared<LogConfig>(LogType::kVerbose, LogLevel::kTrace, "");
+
+    LoggerImpl a = LoggerImplW{ config };
+    LoggerImpl b{ LoggerImplW{config} };
+    LoggerImpl c = LoggerImplW(config);
+    a.Log();
+    b.Log();
+    c.Log();
 
     return 0;
 }

@@ -12,7 +12,7 @@ namespace mds {
 
 class LoggerImplW {
 public:
-    LoggerImplW(const shared_ptr<LogConfig>& log_config)
+    LoggerImplW(shared_ptr<LogConfig>& log_config)
         : log_config_(log_config)
     {
         cout << "LoggerImplW ctor" << endl;
@@ -27,14 +27,14 @@ public:
         cout << "log_config_.use_count() : " << log_config_.use_count() << endl;
     }
 
-    void Log()
+    void Log() const
     {
         std::cout << std::endl;
         auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         std::cout << std::ctime(&time) << std::endl;
     }
 
-    shared_ptr<LogConfig> log_config_;
+    shared_ptr<LogConfig>& log_config_;
 };
 
 } // namespace mds

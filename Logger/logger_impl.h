@@ -1,25 +1,45 @@
 #pragma once
 
-#include "log_config.h"
+#include <memory>
 
 namespace mds {
 
 class LoggerImpl {
+
 public:
-    LoggerImpl();
-    virtual ~LoggerImpl();
+    template <typename T>
+    LoggerImpl(const T& logger_impl_os)
+        : logger_impl_(std::make_shared<Model<T>>(std::move(logger_impl_os)))
+    {
+    }
 
-    virtual void SetLogLevel(LogLevel level);
-    virtual void SetFilter(const char* filter);
-    virtual void SetLogType(LogType type);
+    void Log() const
+    {
+        return logger_impl_->Log();
+    }
 
-    virtual void Log();
+    struct Concept {
+        virtual ~Concept() {}
+        virtual void Log() const = 0;
+    };
 
-protected:
-    bool flushing_;
-    LogLevel level_;
-    char* filter_;
-    LogType type_;
+    template <typename T>
+    struct Model : Concept {
+        Model(const T& t)
+            : logger_impl_os(t)
+        {
+        }
+
+        void Log() const override
+        {
+            return logger_impl_os.Log();
+        }
+
+    private:
+        T logger_impl_os;
+    };
+
+    std::shared_ptr<const Concept> logger_impl_;
 };
 
 } // namespace mds
