@@ -2,6 +2,17 @@
 
 From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Personal C++ Archive](#personal-c-archive)
+  - [My Roadmap](#my-roadmap)
+  - [Book](#book)
+  - [Online Material](#online-material)
+
+<!-- /code_chunk_output -->
+
 ## My Roadmap
   
 - Design Patterns
@@ -43,3 +54,12 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
 - Cross-Platform Library
   - Header-Only Library
 - and Beyond C++20...
+
+## Book
+
+- <https://stackoverflow.com/questions/388242/the-definitive-c-book-guide-and-list>
+- A Tour of C++ (2nd Edition)
+
+## Online Material
+
+- News and Blogs
