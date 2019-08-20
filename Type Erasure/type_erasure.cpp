@@ -1,35 +1,32 @@
+// Type Erasure pattern
+// Running in Browser : https://godbolt.org/z/YVCr8s
+// References : https://www.modernescpp.com/index.php/component/content/article/51-blog/modern-c/399-c-core-guidelines-type-erasure-with-templates
+
 #include <iostream>
 #include <memory>
 #include <string>
+#include <typeinfo>
+#include <utility>
 #include <vector>
 
-class Object { // (2)
-
+class Object {
 public:
-    template <typename T> // (3)
-    Object(const T& obj)
-        : object(std::make_shared<Model<T>>(std::move(obj)))
-    {
-    }
-
-    std::string getName() const
-    { // (4)
-        return object->getName();
-    }
-
-    struct Concept { // (5)
+    struct Concept {
         virtual ~Concept() {}
         virtual std::string getName() const = 0;
     };
 
-    template <typename T> // (6)
+    template <typename T>
     struct Model : Concept {
         Model(const T& t)
             : object(t)
         {
+            std::cout << "Model Constructor (Copy " << typeid(T).name() << " object)" << std::endl;
         }
+
         std::string getName() const override
         {
+            std::cout << "Model::getName() Call" << std::endl;
             return object.getName();
         }
 
@@ -37,34 +34,60 @@ public:
         T object;
     };
 
+    template <typename T>
+    Object(const T& obj)
+        : object(std::make_shared<Model<T>>(std::move(obj)))
+    {
+        std::cout << "Object Constructor (Copy " << typeid(T).name() << " object)" << std::endl;
+    }
+
+    ~Object() { std::cout << "Object Destructor (Type Erased)" << std::endl; }
+
+    std::string getName() const
+    {
+        std::cout << "Object::getName() Call" << std::endl;
+        return object->getName();
+    }
+
+private:
     std::shared_ptr<const Concept> object;
 };
 
 void printName(std::vector<Object> vec)
-{ // (7)
-    for (auto v : vec)
+{
+    for (const auto& v : vec)
         std::cout << v.getName() << std::endl;
 }
 
-struct Bar {
+struct Foo {
+    Foo() { std::cout << "Foo Constructor" << std::endl; }
+    Foo(const Foo&) { std::cout << "Foo Copy Constructor" << std::endl; }
+    ~Foo() { std::cout << "Foo Destructor" << std::endl; }
+
     std::string getName() const
-    { // (8)
-        return "Bar";
+    {
+        std::cout << "Foo::getName() Call" << std::endl;
+        return "Foo";
     }
 };
 
-struct Foo {
+struct Bar {
+    Bar() { std::cout << "Bar Constructor" << std::endl; }
+    Bar(const Bar&) { std::cout << "Bar Copy Constructor" << std::endl; }
+    ~Bar() { std::cout << "Bar Destructor" << std::endl; }
+
     std::string getName() const
-    { // (8)
-        return "Foo";
+    {
+        std::cout << "Bar::getName() Call" << std::endl;
+        return "Bar";
     }
 };
 
 int main()
 {
-    std::cout << std::endl;
+    std::vector<Object> vec{ Object{ Foo{} }, Object(Bar()) };
 
-    std::vector<Object> vec{ Object(Foo()), Object(Bar()) }; // (1)
+    std::cout << std::endl;
 
     printName(vec);
 
