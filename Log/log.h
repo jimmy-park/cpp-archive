@@ -3,6 +3,7 @@
 #include <chrono>
 #include <cstdint>
 #include <ctime>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <shared_mutex>
@@ -16,34 +17,42 @@
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif // _MSC_VER
 
-#define MDS_LOG(level, msg)                             \
-    do {                                                \
-        if (Logger::GetInstance().IsEnabled(level)) {   \
-            std::ostringstream output;                  \
-            MDS_LOG_APPEND_TIME_PREFIX(output);         \
-            MDS_LOG_APPEND_FUNC_PREFIX(output);         \
-            MDS_LOG_APPEND_LEVEL_PREFIX(output, level); \
-            output << msg << "\n";                      \
-            std::clog << output.str();                  \
-            std::clog.flush();                          \
-        }                                               \
+#define MDS_LOG(level, msg)                                \
+    do {                                                   \
+        if (Logger::GetInstance().IsLevelEnabled(level)) { \
+            std::ostringstream output;                     \
+            MDS_LOG_APPEND_TIME_PREFIX(output);            \
+            MDS_LOG_APPEND_FUNC_PREFIX(output);            \
+            MDS_LOG_APPEND_LEVEL_PREFIX(output, level);    \
+            MDS_LOG_APPEND_MESSAGE(output, msg);           \
+            MDS_LOG_PRINT(output);                         \
+        }                                                  \
     } while (false)
 
 #define MDS_LOG_APPEND_TIME_PREFIX(output) \
     output << "[" << Logger::GetInstance().GetTimestamp() << "] "
 
 #define MDS_LOG_APPEND_FUNC_PREFIX(output)                                                   \
-    if (Logger::GetInstance().IsEnabled(LogLevel::kPrefixFunc)) {                            \
+    if (Logger::GetInstance().IsLevelEnabled(LogLevel::kPrefixFunc)) {                       \
         output << "[" << __FILE__ << "(" << __LINE__ << "):" << __PRETTY_FUNCTION__ << "] "; \
     }
 
 #define MDS_LOG_APPEND_LEVEL_PREFIX(output, level) \
     output << "[" << Logger::GetInstance().GetLevelLabel(level) << "] "
 
-#define MDS_LOG_INFO(msg) MDS_LOG(LogLevel::kInfo, msg)
-#define MDS_LOG_DEBUG(msg) MDS_LOG(LogLevel::kDebug, msg)
-#define MDS_LOG_WARN(msg) MDS_LOG(LogLevel::kWarn, msg)
+#define MDS_LOG_APPEND_MESSAGE(output, msg) \
+    output << msg << "\n"
+
+#define MDS_LOG_PRINT(output) \
+    Logger::GetInstance().Print(output.str())
+
 #define MDS_LOG_ERROR(msg) MDS_LOG(LogLevel::kError, msg)
+#define MDS_LOG_WARN(msg) MDS_LOG(LogLevel::kWarn, msg)
+#define MDS_LOG_DEBUG(msg) MDS_LOG(LogLevel::kDebug, msg)
+#define MDS_LOG_INFO(msg) MDS_LOG(LogLevel::kInfo, msg)
+
+#define MDS_LOG_LEVEL Logger::GetInstance().SetLevel
+#define MDS_LOG_PATH Logger::GetInstance().SetPath
 
 enum class LogLevel : uint8_t {
     kNone = 0b00000000,
@@ -84,8 +93,9 @@ inline LogLevel& operator|=(LogLevel& lhs, const LogLevel& rhs)
 class Logger : public Singleton<Logger> {
 public:
     Logger()
-        : levels_(LogLevel::kNone){};
-    ~Logger() = default;
+        : levels_(LogLevel::kNone)
+        , file_("test.log", std::ios_base::app){};
+    ~Logger(){};
 
     inline std::string GetTimestamp()
     {
@@ -115,9 +125,25 @@ public:
         }
     }
 
-    inline void Enable(const LogLevel& level) { levels_ |= level; }
-    inline bool IsEnabled(const LogLevel& level) const { return static_cast<uint8_t>(level & levels_) ? true : false; }
+    inline void SetLevel(const LogLevel& level) { levels_ |= level; }
+    inline void SetPath()
+    {
+    }
+    inline void Print(std::string output)
+    {
+        if (Logger::GetInstance().IsPathEnabled()) {
+            file_ << output;
+            file_.flush();
+        } else {
+            std::clog << output;
+            std::clog.flush();
+        }
+    }
+
+    inline bool IsLevelEnabled(const LogLevel& level) const { return static_cast<uint8_t>(level & levels_) ? true : false; }
+    inline bool IsPathEnabled() const { return true; }
 
 private:
     LogLevel levels_;
+    std::ofstream file_;
 };
