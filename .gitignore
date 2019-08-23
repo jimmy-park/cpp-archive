@@ -39,3 +39,8 @@
 #!.vscode/extensions.json
 bin/
 *.dSYM/
+
+# MSVC
+*.ilk
+*.pdb
+*.obj
