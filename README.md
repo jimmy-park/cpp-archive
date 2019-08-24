@@ -32,6 +32,7 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
     - <https://github.com/boostcon/cppnow_presentations_2019/raw/master/05-07-2019_tuesday/Rise_of_the_State_Machines__Kris_Jusiak__cppnow_05072019.pdf>
   - Policy Based Design
 - Logging
+  - Thread-Safe and Type-Safe Print (using operator<< or Variadic Template)
   - [g2log](https://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
   - [Boost.Log](https://www.boost.org/doc/libs/1_71_0/libs/log/doc/html/index.html)
   - [Google glog](https://github.com/google/glog)
@@ -42,6 +43,8 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - [Find memory leaks with the CRT library](https://docs.microsoft.com/en-us/visualstudio/debugger/finding-memory-leaks-using-the-crt-library?view=vs-2019)
   - [Visual Leak Detector](https://github.com/KindDragon/vld)
 - Template Metaprogramming
+  - SFINAE (+ enable_if, decltype, declval, auto, lambda  
+    - <https://jguegant.github.io/blogs/tech/sfinae-introduction.html>
   - vs. constexpr
     - <http://sweeper.egloos.com/3147813>
 - Lambda Expression
