@@ -1,5 +1,5 @@
-// Simple Log Class
-// Running in Browser : https://godbolt.org/z/gY1Y3r
+// Thread-Safe and Type-Safe Singleton Logging Class
+// Running in Browser : https://godbolt.org/z/7XDKL8
 // References : https://github.com/nsnam/ns-3-dev-git/blob/master/src/core/model/log.h
 
 #pragma once
@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -19,7 +20,12 @@
 #include <windows.h>
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 #define __PRETTY_FUNCTION__ __FUNCSIG__
+#else
+#include <sys/stat.h>
 #endif // _MSC_VER
+
+#define LOG_LEVEL Logger::GetInstance().SetLevel
+#define LOG_PATH Logger::GetInstance().SetPath
 
 #define LOG_ERROR(msg) LOG(LogLevel::kError, msg)
 #define LOG_WARN(msg) LOG(LogLevel::kWarn, msg)
@@ -28,6 +34,7 @@
 
 #define LOG(level, msg)                                    \
     do {                                                   \
+        LOG_LOCK;                                          \
         if (Logger::GetInstance().IsLevelEnabled(level)) { \
             std::ostringstream output;                     \
             LOG_APPEND_TIME_PREFIX(output);                \
@@ -38,6 +45,9 @@
         }                                                  \
     } while (false)
 
+#define LOG_LOCK \
+    std::lock_guard<std::mutex> lock(Logger::GetInstance().GetMutex())
+
 #define LOG_APPEND_TIME_PREFIX(output) \
     output << "[" << Logger::GetInstance().GetTimestamp() << "] "
 
@@ -47,16 +57,13 @@
     }
 
 #define LOG_APPEND_LEVEL_PREFIX(output, level) \
-    output << "[" << Logger::GetInstance().GetLevelLabel(level) << "] "
+    output << Logger::GetInstance().GetLevelLabel(level)
 
 #define LOG_APPEND_MESSAGE(output, msg) \
-    output << msg << "\n"
+    output << msg
 
 #define LOG_PRINT(output) \
     Logger::GetInstance().Print(output.str())
-
-#define LOG_LEVEL Logger::GetInstance().SetLevel
-#define LOG_PATH Logger::GetInstance().SetPath
 
 enum class LogLevel : uint8_t {
     kNone = 0b00000000,
@@ -117,17 +124,19 @@ public:
     {
         switch (level) {
         case LogLevel::kError:
-            return "ERROR";
+            return "[ERROR] ";
         case LogLevel::kWarn:
-            return "WARN ";
+            return "[WARN]  ";
         case LogLevel::kDebug:
-            return "DEBUG";
+            return "[DEBUG] ";
         case LogLevel::kInfo:
-            return "INFO ";
+            return "[INFO]  ";
         default:
-            return "UNKNOWN";
+            return "[UNKNOWN] ";
         }
     }
+
+    inline std::mutex& GetMutex() { return mutex_; }
 
     inline void SetLevel(const LogLevel& level) { levels_ |= level; }
     inline void SetPath(const char* path)
@@ -137,6 +146,8 @@ public:
         if (!file_.is_open()) {
 #ifdef _MSC_VER
             CreateDirectoryA("log", nullptr);
+#else
+            mkdir("log", 0777);
 #endif // _MSC_VER
             const auto now = std::chrono::system_clock::now();
             const auto now_time_t = std::chrono::system_clock::to_time_t(now);
@@ -145,9 +156,7 @@ public:
             oss << "log/" << std::put_time(std::localtime(&now_time_t), "[%y%m%d %a] %H-%M-%S") << ".log";
 
             const auto str = oss.str();
-            const auto c_str = str.c_str();
-
-            file_.open(c_str, std::ios_base::out);
+            file_.open(str.c_str(), std::ios_base::out);
         }
     }
 
@@ -156,16 +165,14 @@ public:
 
     inline void Print(std::string output)
     {
-        if (Logger::GetInstance().IsPathEnabled()) {
-            file_ << output;
-            file_.flush();
-        } else {
-            std::clog << output;
-            std::clog.flush();
-        }
+        if (IsPathEnabled())
+            file_ << output << std::endl;
+        else
+            std::clog << output << std::endl;
     }
 
 private:
     LogLevel levels_;
+    std::mutex mutex_;
     std::ofstream file_;
 };
