@@ -44,3 +44,6 @@ bin/
 *.ilk
 *.pdb
 *.obj
+
+# Log
+Log/log/
