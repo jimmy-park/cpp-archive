@@ -1,5 +1,5 @@
 // Thread-Safe and Type-Safe Singleton Logging Class
-// Running in Browser : https://godbolt.org/z/7XDKL8
+// Running in Browser : https://godbolt.org/z/tk4uzw
 // References : https://github.com/nsnam/ns-3-dev-git/blob/master/src/core/model/log.h
 
 #pragma once
@@ -63,7 +63,7 @@
     output << msg
 
 #define LOG_PRINT(output) \
-    Logger::GetInstance().Print(output.str())
+    Logger::GetInstance().Print(output)
 
 enum class LogLevel : uint8_t {
     kNone = 0b00000000,
@@ -161,14 +161,13 @@ public:
     }
 
     inline bool IsLevelEnabled(const LogLevel& level) const { return static_cast<uint8_t>(level & levels_) ? true : false; }
-    inline bool IsPathEnabled() const { return file_.is_open(); }
 
-    inline void Print(std::string output)
+    inline void Print(const std::ostringstream& output)
     {
-        if (IsPathEnabled())
-            file_ << output << std::endl;
+        if (file_.is_open())
+            file_ << output.str() << std::endl;
         else
-            std::clog << output << std::endl;
+            std::clog << output.str() << std::endl;
     }
 
 private:
