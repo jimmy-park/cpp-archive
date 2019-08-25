@@ -29,6 +29,8 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - Expression Templates
     - <https://www.modernescpp.com/index.php/expression-templates>
   - State Machine
+    - <https://www.youtube.com/watch?v=ojZbFIQSdl8>
+    - <https://khuttun.github.io/2017/02/04/implementing-state-machines-with-std-variant.html>
     - <https://github.com/boostcon/cppnow_presentations_2019/raw/master/05-07-2019_tuesday/Rise_of_the_State_Machines__Kris_Jusiak__cppnow_05072019.pdf>
   - Policy Based Design
 - Logging

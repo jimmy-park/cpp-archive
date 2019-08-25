@@ -60,7 +60,7 @@
     output << Logger::GetInstance().GetLevelLabel(level)
 
 #define LOG_APPEND_MESSAGE(output, msg) \
-    output << msg
+    output << msg << "\n"
 
 #define LOG_PRINT(output) \
     Logger::GetInstance().Print(output)
@@ -141,7 +141,7 @@ public:
     inline void SetLevel(const LogLevel& level) { levels_ |= level; }
     inline void SetPath(const char* path)
     {
-        file_.open(path, std::ios_base::app);
+        file_.open(path, std::ios::out | std::ios::binary);
 
         if (!file_.is_open()) {
 #ifdef _MSC_VER
@@ -156,7 +156,7 @@ public:
             oss << "log/" << std::put_time(std::localtime(&now_time_t), "[%y%m%d %a] %H-%M-%S") << ".log";
 
             const auto str = oss.str();
-            file_.open(str.c_str(), std::ios_base::out);
+            file_.open(str.c_str(), std::ios::out | std::ios::binary);
         }
     }
 
@@ -164,10 +164,12 @@ public:
 
     inline void Print(const std::ostringstream& output)
     {
-        if (file_.is_open())
-            file_ << output.str() << std::endl;
-        else
-            std::clog << output.str() << std::endl;
+        if (file_.is_open()) {
+            const auto output_str = output.str();
+            const auto output_c_str = output_str.c_str();
+            file_.write(output_c_str, output_str.size());
+        } else
+            std::clog << output.str();
     }
 
 private:
