@@ -165,9 +165,7 @@ public:
     inline void Print(const std::ostringstream& output)
     {
         if (file_.is_open()) {
-            const auto output_str = output.str();
-            const auto output_c_str = output_str.c_str();
-            file_.write(output_c_str, output_str.size());
+            file_ << output.str();
         } else
             std::clog << output.str();
     }

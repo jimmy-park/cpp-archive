@@ -38,7 +38,8 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - [g2log](https://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
   - [Boost.Log](https://www.boost.org/doc/libs/1_71_0/libs/log/doc/html/index.html)
   - [Google glog](https://github.com/google/glog)
-  - [llcpp - A quest for faster C++ logging](https://blapid.github.io/cpp/2017/10/31/llcpp-a-quest-for-faster-logging-intro.html)
+  - [llcpp - A quest for faster C++ logging](https://github.com/blapid/llcpp)
+    - <https://blapid.github.io/cpp/2017/10/31/llcpp-a-quest-for-faster-logging-intro.html>
   - [spdlog](https://github.com/gabime/spdlog)
   - [Thread-Safe Logging Singleton](https://gist.github.com/kevinkreiser/39f2e39273c625d96790)
 - Memory Management
