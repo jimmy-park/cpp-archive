@@ -14,6 +14,8 @@
 #include <sstream>
 #include <string>
 
+#include <cstdio>
+
 #include "singleton.h"
 
 #ifdef _MSC_VER
@@ -106,7 +108,13 @@ public:
     Logger()
         : levels_(LogLevel::kNone)
         , file_(){};
-    ~Logger(){};
+    ~Logger()
+    {
+        if (fd_ != nullptr) {
+            std::fclose(fd_);
+            fd_ = nullptr;
+        }
+    };
 
     inline std::string GetTimestamp()
     {
@@ -141,31 +149,41 @@ public:
     inline void SetLevel(const LogLevel& level) { levels_ |= level; }
     inline void SetPath(const char* path)
     {
-        file_.open(path, std::ios::out | std::ios::binary);
+        //         file_.open(path, std::ios::out | std::ios::binary);
 
-        if (!file_.is_open()) {
-#ifdef _MSC_VER
-            CreateDirectoryA("log", nullptr);
-#else
-            mkdir("log", 0777);
-#endif // _MSC_VER
-            const auto now = std::chrono::system_clock::now();
-            const auto now_time_t = std::chrono::system_clock::to_time_t(now);
+        //         if (!file_.is_open()) {
+        // #ifdef _MSC_VER
+        //             CreateDirectoryA("log", nullptr);
+        // #else
+        //             mkdir("log", 0777);
+        // #endif // _MSC_VER
+        //             const auto now = std::chrono::system_clock::now();
+        //             const auto now_time_t = std::chrono::system_clock::to_time_t(now);
 
-            std::ostringstream oss;
-            oss << "log/" << std::put_time(std::localtime(&now_time_t), "[%y%m%d %a] %H-%M-%S") << ".log";
+        //             std::ostringstream oss;
+        //             oss << "log/" << std::put_time(std::localtime(&now_time_t), "[%y%m%d %a] %H-%M-%S") << ".log";
 
-            const auto str = oss.str();
-            file_.open(str.c_str(), std::ios::out | std::ios::binary);
+        //             const auto str = oss.str();
+        //             file_.open(str.c_str(), std::ios::out | std::ios::binary);
+        //         }
+
+        if (fd_ != nullptr) {
+            std::fclose(fd_);
+            fd_ = nullptr;
         }
+
+        fd_ = _fsopen(path, "wb", _SH_DENYNO);
     }
 
     inline bool IsLevelEnabled(const LogLevel& level) const { return static_cast<uint8_t>(level & levels_) ? true : false; }
 
     inline void Print(const std::ostringstream& output)
     {
-        if (file_.is_open()) {
-            file_ << output.str();
+        if (fd_ != nullptr) {
+            //file_ << output.str();
+            const auto output_str = output.str();
+
+            std::fwrite(output_str.c_str(), 1, output_str.size(), fd_);
         } else
             std::clog << output.str();
     }
@@ -174,4 +192,5 @@ private:
     LogLevel levels_;
     std::mutex mutex_;
     std::ofstream file_;
+    std::FILE* fd_{ nullptr };
 };

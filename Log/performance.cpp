@@ -13,7 +13,7 @@ using std::chrono::high_resolution_clock;
 int main()
 {
     LOG_LEVEL(LogLevel::kInfo);
-    LOG_PATH("");
+    LOG_PATH("perf.log");
 
     cout << "**************************************************************" << endl;
     cout << "Single thread, " << howmany << " iterations" << endl;
@@ -25,7 +25,8 @@ int main()
     auto delta = high_resolution_clock::now() - start;
     auto delta_d = duration_cast<duration<double>>(delta).count();
 
-    cout << delta_d << " sec " << int(howmany / delta_d) << " msg/sec" << endl;
+    cout << delta_d << " sec " << int(howmany / delta_d) << " msg/sec\n"
+         << endl;
 
     cout << "**************************************************************" << endl;
     cout << threads << " thread, " << howmany << " iterations" << endl;
@@ -48,5 +49,6 @@ int main()
     delta = high_resolution_clock::now() - start;
     delta_d = duration_cast<duration<double>>(delta).count();
 
-    cout << delta_d << " sec " << int(howmany / delta_d) << " msg/sec" << endl;
+    cout << delta_d << " sec " << int(howmany / delta_d) << " msg/sec\n"
+         << endl;
 }
