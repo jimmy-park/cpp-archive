@@ -7,6 +7,7 @@
 #include <chrono>
 #include <condition_variable>
 #include <cstdint>
+#include <cstring>
 #include <ctime>
 #include <fstream>
 #include <future>
@@ -22,47 +23,30 @@
 #ifdef _MSC_VER
 #include <windows.h>
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
+#define __FILENAME__ (std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #else
 #include <sys/stat.h>
+#define __FILENAME__ (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif // _MSC_VER
 
 #define LOG_LEVEL Logger::GetInstance().SetLevel
 #define LOG_PATH Logger::GetInstance().SetPath
 
-#define LOG_ERROR(msg) LOG(LogLevel::kError, msg)
-#define LOG_WARN(msg) LOG(LogLevel::kWarn, msg)
-#define LOG_DEBUG(msg) LOG(LogLevel::kDebug, msg)
-#define LOG_INFO(msg) LOG(LogLevel::kInfo, msg)
+#define LOG_ERROR(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kError, message)
+#define LOG_WARN(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kWarn, message)
+#define LOG_DEBUG(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kDebug, message)
+#define LOG_INFO(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kInfo, message)
 
-#define LOG(level, msg)                                                                                        \
-    do {                                                                                                       \
-        if (Logger::GetInstance().IsLevelEnabled(level)) {                                                     \
-            std::ostringstream output;                                                                         \
-            output << msg;                                                                                     \
-            auto fut = std::async(std::launch::async, &Logger::LogPush, &Logger::GetInstance(), output.str()); \
-        }                                                                                                      \
+#define LOG(file, line, function, level, message)                                      \
+    do {                                                                               \
+        if (Logger::GetInstance().IsLevelEnabled(level)) {                             \
+            std::ostringstream message_stream;                                         \
+            message_stream << message;                                                 \
+            LogFormat log_format{ file, line, function, level, message_stream.str() }; \
+            Logger::GetInstance().LogPush(log_format);                                 \
+        }                                                                              \
     } while (false)
-
-#define LOG_LOCK \
-    std::lock_guard<std::mutex> lock(Logger::GetInstance().GetMutex())
-
-#define LOG_APPEND_TIME_PREFIX(output) \
-    output << "[" << Logger::GetInstance().GetTimestamp() << "] "
-
-#define LOG_APPEND_FUNC_PREFIX(output)                                                       \
-    if (Logger::GetInstance().IsLevelEnabled(LogLevel::kPrefixFunc)) {                       \
-        output << "[" << __FILE__ << "(" << __LINE__ << "):" << __PRETTY_FUNCTION__ << "] "; \
-    }
-
-#define LOG_APPEND_LEVEL_PREFIX(output, level) \
-    output << Logger::GetInstance().GetLevelLabel(level)
-
-#define LOG_APPEND_MESSAGE(output, msg) \
-    output << msg
-
-#define LOG_PRINT(output) \
-    Logger::GetInstance().LogPush(output)
 
 enum class LogLevel : uint8_t {
     kNone = 0b00000000,
@@ -88,18 +72,28 @@ inline LogLevel operator&(const LogLevel& lhs, const LogLevel& rhs) { return sta
 inline LogLevel operator|(const LogLevel& lhs, const LogLevel& rhs) { return static_cast<LogLevel>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs)); }
 inline LogLevel& operator|=(LogLevel& lhs, const LogLevel& rhs) { return lhs = lhs | rhs, lhs; }
 
+struct LogFormat {
+    const char* file;
+    const int line;
+    const char* function;
+    const LogLevel level;
+    const std::string message;
+};
+
 class Logger : public Singleton<Logger> {
 public:
     Logger();
     ~Logger();
 
+    void AppendTimePrefix(std::ostringstream& message_stream, const LogFormat& log_format);
+    void AppendLevelPrefix(std::ostringstream& message_stream, const LogFormat& log_format);
+    void AppendFuncPrefix(std::ostringstream& message_stream, const LogFormat& log_format);
+
+    void LogFlush();
     void LogPop();
-    void LogPush(std::string output);
+    void LogPush(const LogFormat& log_format);
 
-    std::string GetTimestamp();
-    std::string GetLevelLabel(const LogLevel& level);
-
-    inline void SetLevel(const LogLevel& level) { levels_ |= level; }
+    void SetLevel(const LogLevel& level);
     void SetPath(const char* path);
 
     inline bool IsLevelEnabled(const LogLevel& level) const { return static_cast<uint8_t>(level & levels_) ? true : false; }
@@ -112,5 +106,5 @@ private:
     std::queue<std::string> queue_;
     std::condition_variable data_cond_;
 
-    std::future<void> fut;
+    std::thread thd_;
 };
