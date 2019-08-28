@@ -4,29 +4,24 @@
 
 #pragma once
 
-#include <chrono>
-#include <condition_variable>
 #include <cstdint>
 #include <cstring>
-#include <ctime>
 #include <fstream>
-#include <future>
-#include <iomanip>
-#include <iostream>
 #include <mutex>
 #include <queue>
 #include <sstream>
 #include <string>
+#include <thread>
 
 #include "singleton.h"
 
 #ifdef _MSC_VER
-#include <windows.h>
-#pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 #define __FILENAME__ (std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)
 #define __PRETTY_FUNCTION__ __FUNCSIG__
-#else
-#include <sys/stat.h>
+#else // Unix
+#ifndef __PRETTY_FUNCTION__
+#define __PRETTY_FUNCTION__ __func__
+#endif
 #define __FILENAME__ (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif // _MSC_VER
 
@@ -52,13 +47,13 @@ enum class LogLevel : uint8_t {
     kNone = 0b00000000,
     kError = 0b00000001,
     kWarn = 0b00000010,
-    kDebug = 0b00000100,
-    kInfo = 0b00001000,
+    kInfo = 0b00000100,
+    kDebug = 0b00001000,
 
     kLevelError = 0b00000001,
     kLevelWarn = 0b00000011,
-    kLevelDebug = 0b00000111,
-    kLevelInfo = 0b00001111,
+    kLevelInfo = 0b00000111,
+    kLevelDebug = 0b00001111,
     kLevelAll = 0b00011111,
 
     kPrefixFunc = 0b00100000,
@@ -104,7 +99,5 @@ private:
     std::mutex mutex_;
     std::ofstream file_;
     std::queue<std::string> queue_;
-    std::condition_variable data_cond_;
-
-    std::thread thd_;
+    std::thread worker_thread_;
 };

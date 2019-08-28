@@ -1,5 +1,19 @@
 #include "log.h"
 
+#ifdef _MSC_VER
+#include <windows.h>
+#else // Unix
+#include <sys/stat.h>
+#endif // _MSC_VER
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <iostream>
+
+#ifdef _MSC_VER
+#pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
+#endif // _MSC_VER
+
 Logger::Logger()
     : release_(false)
     , levels_(LogLevel::kNone)
@@ -9,7 +23,7 @@ Logger::Logger()
 Logger::~Logger()
 {
     release_ = true;
-    thd_.join();
+    worker_thread_.join();
 }
 
 void Logger::AppendTimePrefix(std::ostringstream& message_stream, const LogFormat& log_format)
@@ -25,27 +39,22 @@ void Logger::AppendLevelPrefix(std::ostringstream& message_stream, const LogForm
 {
     switch (log_format.level) {
     case LogLevel::kError:
-        message_stream << "[ERROR] ";
-        return;
+        return (message_stream << "[ERROR] "), void();
     case LogLevel::kWarn:
-        message_stream << "[WARN]  ";
-        return;
-    case LogLevel::kDebug:
-        message_stream << "[DEBUG] ";
-        return;
+        return (message_stream << "[WARN] "), void();
     case LogLevel::kInfo:
-        message_stream << "[INFO]  ";
-        return;
+        return (message_stream << "[INFO] "), void();
+    case LogLevel::kDebug:
+        return (message_stream << "[DEBUG] "), void();
     default:
-        message_stream << "[UNKNOWN] ";
-        return;
+        return (message_stream << "[UNKNOWN] "), void();
     }
 }
 
 void Logger::AppendFuncPrefix(std::ostringstream& message_stream, const LogFormat& log_format)
 {
     if (IsLevelEnabled(LogLevel::kPrefixFunc))
-        message_stream << log_format.file << "(" << log_format.line << "):" << log_format.function << "| ";
+        message_stream << log_format.file << "(" << log_format.line << "):" << log_format.function << " ";
 }
 
 void Logger::LogFlush()
@@ -61,11 +70,14 @@ void Logger::LogFlush()
 
 void Logger::LogPop()
 {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
-    data_cond_.wait(lock, [this] { return !queue_.empty(); });
+    if (file_.is_open()) {
+        file_ << queue_.front() << std::endl;
+    } else {
+        std::clog << queue_.front() << std::endl;
+    }
 
-    file_ << queue_.front() << std::endl;
     queue_.pop();
 }
 
@@ -80,13 +92,12 @@ void Logger::LogPush(const LogFormat& log_format)
     output << log_format.message;
 
     queue_.push(output.str());
-    data_cond_.notify_one();
 }
 
 void Logger::SetLevel(const LogLevel& level)
 {
     levels_ |= level;
-    thd_ = std::thread(&Logger::LogFlush, this);
+    worker_thread_ = std::thread(&Logger::LogFlush, this);
 }
 
 void Logger::SetPath(const char* path)
@@ -117,11 +128,13 @@ void print(LogLevel level)
     }
 }
 
+#include <future>
+
 int main()
 {
     LOG_LEVEL(LogLevel::kAll);
     // LOG_LEVEL(LogLevel::kPrefixLevel | LogLevel::kInfo | LogLevel::kError);
-    LOG_PATH("temp.log");
+    //LOG_PATH("temp.log");
 
     auto fut1 = std::async(print, LogLevel::kInfo);
     auto fut2 = std::async(print, LogLevel::kDebug);
