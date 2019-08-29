@@ -34,10 +34,8 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
     - <https://github.com/boostcon/cppnow_presentations_2019/raw/master/05-07-2019_tuesday/Rise_of_the_State_Machines__Kris_Jusiak__cppnow_05072019.pdf>
   - Policy Based Design
 - Logging
-  - Async, Worker Thread (sleep and work), Circular Queue, System Crash Catch
+  - Signal/Exception Handler, Asynchronous I/O, Concurrent Queue, JSON Format
   - [g2log](https://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
-  - [llcpp - A quest for faster C++ logging](https://github.com/blapid/llcpp)
-    - <https://blapid.github.io/cpp/2017/10/31/llcpp-a-quest-for-faster-logging-intro.html>
 - Memory Management
   - [Find memory leaks with the CRT library](https://docs.microsoft.com/en-us/visualstudio/debugger/finding-memory-leaks-using-the-crt-library?view=vs-2019)
   - [Visual Leak Detector](https://github.com/KindDragon/vld)
