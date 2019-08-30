@@ -1,16 +1,17 @@
-#include "log.h"
-
 #include <future>
+
+#include "log_sync.h"
 
 void print(LogLevel level)
 {
-    for (int i = 0; i < 100; ++i)
-        LOG(level, i);
+    for (int i = 0; i < 100; ++i) {
+        LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, level, i);
+    }
 }
 
 int main()
 {
-    LOG_LEVEL(LogLevel::kLevelAll);
+    LOG_LEVEL(LogLevel::kAll);
     // LOG_LEVEL(LogLevel::kPrefixLevel | LogLevel::kInfo | LogLevel::kError);
     LOG_PATH("temp.log");
 
