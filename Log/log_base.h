@@ -72,7 +72,7 @@ template <typename T>
 class LogBase {
 public:
     LogBase()
-        : levels_(LogLevel::kNone)
+        : levels_{ LogLevel::kNone }
     {
     }
     ~LogBase(){};
@@ -107,9 +107,6 @@ public:
         if (IsLevelEnabled(LogLevel::kPrefixFunc))
             message_stream << log_format.file << "(" << log_format.line << "):" << log_format.function << " ";
     }
-
-    void LogPrintInterface(const LogFormat& log_format) { static_cast<T*>(this)->LogPrintImplement(log_format); }
-    void LogPrintImplement(const LogFormat& log_format) { std::cout << "Implement [LogPrintImplement]" << std::endl; }
 
     void SetLevel(const LogLevel& level)
     {
