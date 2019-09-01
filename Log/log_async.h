@@ -10,16 +10,16 @@
 #define LOG_LEVEL LogAsync::GetInstance().SetLevel
 #define LOG_PATH LogAsync::GetInstance().SetPath
 
-#define LOG(file, line, function, level, message)                                                             \
-    do {                                                                                                      \
-        if (LogAsync::GetInstance().IsLevelEnabled(level)) {                                                  \
-            std::ostringstream message_stream;                                                                \
-            message_stream << message;                                                                        \
+#define LOG(file, line, function, level, message)                                                   \
+    do {                                                                                            \
+        if (LogAsync::GetInstance().IsLevelEnabled(level)) {                                        \
+            std::ostringstream message_stream;                                                      \
+            message_stream << message;                                                              \
             LogAsync::GetInstance().LogPush({ file, line, function, level, message_stream.str() }); \
-        }                                                                                                     \
+        }                                                                                           \
     } while (false)
 
-class LogAsync : public Singleton<LogAsync>, public LogBase<LogAsync> {
+class LogAsync : public LogBase<LogAsync> {
 public:
     LogAsync()
         : release_{ false }

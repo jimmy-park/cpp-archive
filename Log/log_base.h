@@ -69,7 +69,7 @@ struct LogFormat {
 };
 
 template <typename T>
-class LogBase {
+class LogBase : public Singleton<T> {
 public:
     LogBase()
         : levels_{ LogLevel::kNone }

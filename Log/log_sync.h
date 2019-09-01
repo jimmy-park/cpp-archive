@@ -16,7 +16,7 @@
         }                                                                                           \
     } while (false)
 
-class LogSync : public Singleton<LogSync>, public LogBase<LogSync> {
+class LogSync : public LogBase<LogSync> {
 public:
     void LogPrint(const LogFormat& log_format)
     {

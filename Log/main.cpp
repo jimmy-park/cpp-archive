@@ -1,6 +1,6 @@
 #include <future>
 
-#include "log_async.h"
+#include "log_sync.h"
 
 void print(LogLevel level)
 {
