@@ -2,6 +2,7 @@
 
 #include <mutex>
 #include <queue>
+#include <shared_mutex>
 #include <string>
 #include <thread>
 
@@ -39,14 +40,14 @@ public:
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(100ms);
 
-            while (!queue_.empty())
+            while (!IsEmpty())
                 LogPop();
         }
     }
 
     void LogPop()
     {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::unique_lock lock(mutex_);
 
         if (file_.is_open()) {
             file_ << queue_.front() << std::endl;
@@ -59,7 +60,7 @@ public:
 
     void LogPush(const LogFormat& log_format)
     {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::unique_lock lock(mutex_);
 
         std::ostringstream output;
         AppendTimePrefix(output, log_format);
@@ -70,9 +71,14 @@ public:
         queue_.push(output.str());
     }
 
+    bool IsEmpty() const{
+        std::shared_lock lock(mutex_);
+        return queue_.empty();
+    }
+
 private:
     bool release_;
-    std::mutex mutex_;
+    mutable std::shared_mutex mutex_;
     std::queue<std::string> queue_;
     std::thread worker_thread_;
 };

@@ -4,11 +4,11 @@
 
 #pragma once
 
-#ifdef _MSC_VER
+#ifdef _WIN32
 #include <windows.h>
 #else // Unix
 #include <sys/stat.h>
-#endif // _MSC_VER
+#endif // _WIN32
 #include <chrono>
 #include <cstdint>
 #include <cstring>
@@ -21,14 +21,18 @@
 
 #include "singleton.h"
 
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define __FILENAME__ (std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)
-#define __PRETTY_FUNCTION__ __FUNCSIG__
 #else // Unix
+#define __FILENAME__ (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif // _WIN32
+
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#else
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __func__
-#endif
-#define __FILENAME__ (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif // __PRETTY_FUNCTION__
 #endif // _MSC_VER
 
 #define LOG_ERROR(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kError, message)
@@ -83,7 +87,7 @@ public:
         const auto now_time_t = std::chrono::system_clock::to_time_t(now);
         const auto now_us = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()) % 1000000;
 
-        message_stream << std::put_time(std::localtime(&now_time_t), "%F %T") << "." << std::setfill('0') << std::setw(6) << now_us.count() << " ";
+        message_stream << std::put_time(std::localtime(&now_time_t), "%Y-%m-%d %X") << "." << std::setfill('0') << std::setw(6) << now_us.count() << " ";
     }
 
     void AppendLevelPrefix(std::ostringstream& message_stream, const LogFormat& log_format)
@@ -117,9 +121,9 @@ public:
         file_.open(path, std::ios::out | std::ios::binary);
 
         if (!file_.is_open()) {
-#ifdef _MSC_VER
+#ifdef _WIN32
             CreateDirectoryA("log", nullptr);
-#else
+#elif defined(unix) || defined(__unix__) || defined(__unix)
             mkdir("log", 0777);
 #endif // _MSC_VER
             const auto now = std::chrono::system_clock::now();
