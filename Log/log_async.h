@@ -1,5 +1,8 @@
 #pragma once
 
+#include <atomic>
+#include <condition_variable>
+#include <future>
 #include <mutex>
 #include <queue>
 #include <shared_mutex>
@@ -23,31 +26,33 @@
 class LogAsync : public LogBase<LogAsync> {
 public:
     LogAsync()
-        : release_{ false }
-        , worker_thread_{ std::thread(&LogAsync::LogFlush, this) }
+        : enqueue_{ true }
+        , release_{ false }
+        , task_{ std::async(std::launch::async, &LogAsync::LogFlush, this) }
     {
     }
 
     ~LogAsync()
     {
+        enqueue_ = false;
         release_ = true;
-        worker_thread_.join();
+        task_.wait();
     }
 
     void LogFlush()
     {
-        while (!release_) {
-            using namespace std::chrono_literals;
-            std::this_thread::sleep_for(100ms);
-
-            while (!IsEmpty())
-                LogPop();
+        while (!release_ || !IsEmpty()) {
+            LogPop();
         }
     }
 
     void LogPop()
     {
         std::unique_lock lock(mutex_);
+
+        while (queue_.empty()) {
+            data_cond_.wait(lock);
+        }
 
         if (file_.is_open()) {
             file_ << queue_.front() << std::endl;
@@ -62,23 +67,31 @@ public:
     {
         std::unique_lock lock(mutex_);
 
+        if (!enqueue_)
+            return;
+
         std::ostringstream output;
-        AppendTimePrefix(output, log_format);
+        AppendTimePrefix(output);
         AppendLevelPrefix(output, log_format);
         AppendFuncPrefix(output, log_format);
         output << log_format.message;
 
-        queue_.push(output.str());
+        queue_.emplace(output.str());
+        data_cond_.notify_one();
     }
 
-    bool IsEmpty() const{
+    bool IsEmpty()
+    {
         std::shared_lock lock(mutex_);
         return queue_.empty();
     }
 
 private:
-    bool release_;
+    std::atomic_bool enqueue_;
+    std::atomic_bool release_;
     mutable std::shared_mutex mutex_;
     std::queue<std::string> queue_;
     std::thread worker_thread_;
+    std::future<void> task_;
+    std::condition_variable_any data_cond_;
 };

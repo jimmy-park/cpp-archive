@@ -93,9 +93,11 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - [C++ Reddit](https://www.reddit.com/r/cpp/)
   - [GeeksForGeeks](https://www.geeksforgeeks.org/category/cpp/)
   - [Microsoft C++ Team Blog](https://devblogs.microsoft.com/cppblog/)
+  - [Sutter's Mill](https://herbsutter.com/)
 - Online C++ Compiler
   - [Compiler Explorer](https://godbolt.org/)
   - [Quick C++ Benchmark](http://quick-bench.com/)
+  - [Coliru](https://coliru.stacked-crooked.com/)
 - Coding Convention
   - [C++ Core Guidelines](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
   - [C++ Dos and Don'ts](https://chromium.googlesource.com/chromium/src/+/HEAD/styleguide/c++/c++-dos-and-donts.md)

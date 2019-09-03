@@ -81,7 +81,7 @@ public:
     }
     ~LogBase(){};
 
-    void AppendTimePrefix(std::ostringstream& message_stream, const LogFormat& log_format)
+    void AppendTimePrefix(std::ostringstream& message_stream)
     {
         const auto now = std::chrono::system_clock::now();
         const auto now_time_t = std::chrono::system_clock::to_time_t(now);

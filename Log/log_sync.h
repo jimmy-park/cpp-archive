@@ -23,7 +23,7 @@ public:
         std::lock_guard<std::mutex> lock(mutex_);
 
         std::ostringstream output;
-        AppendTimePrefix(output, log_format);
+        AppendTimePrefix(output);
         AppendLevelPrefix(output, log_format);
         AppendFuncPrefix(output, log_format);
         output << log_format.message;
