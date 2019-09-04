@@ -19,7 +19,7 @@
 #include <sstream>
 #include <string>
 
-#include "singleton.h"
+#include "Singleton/singleton.h"
 
 #ifdef _WIN32
 #define __FILENAME__ (std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)

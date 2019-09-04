@@ -24,7 +24,7 @@ int main()
     // LOG_ERROR("error " << msg);
     // LOG_WARN("warn " << msg);
     // LOG_DEBUG("debug " << msg);
-    // LOG_INFO("info " << msg);
+    // LOG_INFO("info " << msg);B
     // fut1.wait();
     // fut2.wait();
     // fut3.wait();

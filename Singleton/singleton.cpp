@@ -1,4 +1,5 @@
 #include "singleton.h"
+
 #include <iostream>
 
 class A : public Singleton<A> {

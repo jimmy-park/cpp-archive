@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "cl.exe build active file",
+            "command": "cl.exe",
+            "args": [
+                "/I",
+                "${workspaceFolder}",
+                "/O2",
+                "/Zi",
+                "/EHsc",
+                "/std:c++17",
+                "/Fd:",
+                "${fileDirname}\\",
+                "/Fe:",
+                "${fileDirname}\\",
+                "/Fo:",
+                "${fileDirname}\\",
+                "${file}",
+                "${fileDirname}\\bench.cpp",
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
