@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #endif // _WIN32
 #include <chrono>
+#include <csignal>
 #include <cstdint>
 #include <cstring>
 #include <ctime>
@@ -27,30 +28,36 @@
 #define __FILENAME__ (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif // _WIN32
 
+#ifndef __PRETTY_FUNCTION__
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #else
-#ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __func__
-#endif // __PRETTY_FUNCTION__
 #endif // _MSC_VER
+#endif // __PRETTY_FUNCTION__
 
+#define LOG_FATAL(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kFatal, message)
 #define LOG_ERROR(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kError, message)
 #define LOG_WARN(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kWarn, message)
 #define LOG_INFO(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kInfo, message)
 #define LOG_DEBUG(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kDebug, message)
 
+// Forward Declaration
+//std::string SignalName(int);
+void SignalHandler(int);
+
 enum class LogLevel : uint8_t {
     kNone = 0b00000000,
-    kError = 0b00000001,
-    kWarn = 0b00000010,
-    kInfo = 0b00000100,
-    kDebug = 0b00001000,
+    kFatal = 0b00000001,
+    kError = 0b00000010,
+    kWarn = 0b00000100,
+    kInfo = 0b00001000,
+    kDebug = 0b00010000,
 
-    kLevelError = 0b00000001,
-    kLevelWarn = 0b00000011,
-    kLevelInfo = 0b00000111,
-    kLevelDebug = 0b00001111,
+    kLevelError = 0b00000011,
+    kLevelWarn = 0b00000111,
+    kLevelInfo = 0b00001111,
+    kLevelDebug = 0b00011111,
     kLevelAll = 0b00011111,
 
     kPrefixFunc = 0b00100000,
@@ -78,6 +85,12 @@ public:
     LogBase()
         : levels_{ LogLevel::kNone }
     {
+        std::signal(SIGINT, SignalHandler);
+        std::signal(SIGILL, SignalHandler);
+        std::signal(SIGFPE, SignalHandler);
+        std::signal(SIGSEGV, SignalHandler);
+        std::signal(SIGTERM, SignalHandler);
+        std::signal(SIGABRT, SignalHandler);
     }
     ~LogBase(){};
 
@@ -93,6 +106,8 @@ public:
     void AppendLevelPrefix(std::ostringstream& message_stream, const LogFormat& log_format)
     {
         switch (log_format.level) {
+        case LogLevel::kFatal:
+            return (message_stream << "[FATAL] "), void();
         case LogLevel::kError:
             return (message_stream << "[ERROR] "), void();
         case LogLevel::kWarn:

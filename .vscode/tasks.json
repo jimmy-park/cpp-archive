@@ -18,8 +18,7 @@
                 "${fileDirname}\\",
                 "/Fo:",
                 "${fileDirname}\\",
-                "${file}",
-                "${fileDirname}\\bench.cpp",
+                "${file}"
             ],
             "problemMatcher": [
                 "$gcc"

@@ -1,6 +1,7 @@
 #include <future>
 
-#include "log_async.h"
+#include "log_sync.h"
+#include "signal_handler.h"
 
 void print(const LogLevel& level)
 {
@@ -15,10 +16,10 @@ int main()
     // LOG_LEVEL(LogLevel::kPrefixLevel | LogLevel::kInfo | LogLevel::kError);
     //LOG_PATH("temp.log");
 
-    auto fut1 = std::async(std::launch::async, print, LogLevel::kInfo);
-    auto fut2 = std::async(std::launch::async, print, LogLevel::kDebug);
-    auto fut3 = std::async(std::launch::async, print, LogLevel::kWarn);
-    auto fut4 = std::async(std::launch::async, print, LogLevel::kError);
+    // auto fut1 = std::async(std::launch::async, print, LogLevel::kInfo);
+    // auto fut2 = std::async(std::launch::async, print, LogLevel::kDebug);
+    // auto fut3 = std::async(std::launch::async, print, LogLevel::kWarn);
+    // auto fut4 = std::async(std::launch::async, print, LogLevel::kError);
 
     // std::string msg{ "message" };
     // LOG_ERROR("error " << msg);
@@ -29,4 +30,11 @@ int main()
     // fut2.wait();
     // fut3.wait();
     // fut4.wait();
+
+    std::raise(SIGINT);
+    std::raise(SIGILL);
+    std::raise(SIGFPE);
+    std::raise(SIGSEGV);
+    std::raise(SIGTERM);
+    std::raise(SIGABRT);
 }
