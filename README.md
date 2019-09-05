@@ -33,14 +33,18 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
     - <https://khuttun.github.io/2017/02/04/implementing-state-machines-with-std-variant.html>
     - <https://github.com/boostcon/cppnow_presentations_2019/raw/master/05-07-2019_tuesday/Rise_of_the_State_Machines__Kris_Jusiak__cppnow_05072019.pdf>
   - Policy Based Design
-- Logging
+- ~~Logging~~
   - Signal/Exception Handler, Asynchronous I/O, Concurrent Queue, JSON Format
-  - [g2log](https://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
+  - [g3log](https://github.com/KjellKod/g3log)
+  - [spdlog](https://github.com/gabime/spdlog)
+- Testing
+  - [Testing tools in Visual Studio](https://docs.microsoft.com/en-us/visualstudio/test/improve-code-quality?view=vs-2019)
+  - [doctest](https://github.com/onqtam/doctest)
 - Memory Management
   - [Find memory leaks with the CRT library](https://docs.microsoft.com/en-us/visualstudio/debugger/finding-memory-leaks-using-the-crt-library?view=vs-2019)
   - [Visual Leak Detector](https://github.com/KindDragon/vld)
 - Template Metaprogramming
-  - SFINAE (+ enable_if, decltype, declval, auto, lambda  
+  - SFINAE (+ enable_if, decltype, declval, auto, lambda)
     - <https://jguegant.github.io/blogs/tech/sfinae-introduction.html>
   - vs. constexpr
     - <http://sweeper.egloos.com/3147813>
@@ -53,7 +57,7 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - Performance Comparison
     - <https://www.modernescpp.com/index.php/my-conclusion-summation-of-a-vector-in-three-variants>
 - Network
-  - Modern Socket Programming
+  - Socket Programming in a Modern C++ Way
   - HTTP 3.0 (and QUIC)
   - P2P (NAT Traversal, STUN, TURN, ICE)
 - Distributed Hash Table
