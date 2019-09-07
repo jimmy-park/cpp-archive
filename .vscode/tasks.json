@@ -38,7 +38,8 @@
                 "-O2",
                 "-Wall",
                 "-I",
-                "${workspaceFolder}"
+                "${workspaceFolder}",
+                "-v"
             ],
             "options": {
                 "cwd": "/usr/bin"

@@ -6,15 +6,15 @@
 #include <chrono>
 #include <string>
 
-#define BENCH(func_name) \
-    Bench func_latency(func_name)
+#define BENCH(scope_name) \
+    Bench scope_latency(scope_name)
 
 class Bench {
 public:
-    Bench(const char* func_name);
+    Bench(std::string scope_name);
     ~Bench();
 
 private:
     std::chrono::time_point<std::chrono::high_resolution_clock> start_;
-    std::string func_name_;
+    std::string scope_name_;
 };

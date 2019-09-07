@@ -3,6 +3,7 @@
 #include <mutex>
 
 #include "log_base.h"
+#include "signal_handler.h"
 
 #define LOG_LEVEL LogSync::GetInstance().SetLevel
 #define LOG_PATH LogSync::GetInstance().SetPath
@@ -35,5 +36,5 @@ public:
     }
 
 private:
-    std::mutex mutex_;
+    mutable std::mutex mutex_;
 };

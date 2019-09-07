@@ -1,10 +1,9 @@
 #pragma once
 
 #include <csignal>
+#include <iostream>
 #include <sstream>
 #include <string>
-
-#include "log_sync.h"
 
 std::string SignalName(int signal)
 {
@@ -30,5 +29,5 @@ std::string SignalName(int signal)
 
 void SignalHandler(int signal)
 {
-    LOG_FATAL("Received " << SignalName(signal) << " signal");
+    std::cout << "Received " << SignalName(signal) << " signal" << std::endl;
 }

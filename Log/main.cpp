@@ -1,7 +1,7 @@
 #include <future>
+#include <csignal>
 
 #include "log_sync.h"
-#include "signal_handler.h"
 
 void print(const LogLevel& level)
 {

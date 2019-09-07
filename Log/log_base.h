@@ -21,6 +21,7 @@
 #include <string>
 
 #include "Singleton/singleton.h"
+#include "signal_handler.h"
 
 #ifdef _WIN32
 #define __FILENAME__ (std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)
@@ -41,10 +42,6 @@
 #define LOG_WARN(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kWarn, message)
 #define LOG_INFO(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kInfo, message)
 #define LOG_DEBUG(message) LOG(__FILENAME__, __LINE__, __PRETTY_FUNCTION__, LogLevel::kDebug, message)
-
-// Forward Declaration
-//std::string SignalName(int);
-void SignalHandler(int);
 
 enum class LogLevel : uint8_t {
     kNone = 0b00000000,
