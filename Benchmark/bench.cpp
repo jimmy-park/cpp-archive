@@ -12,6 +12,6 @@ Bench::~Bench()
 {
     auto elapsed = std::chrono::high_resolution_clock::now() - start_;
     std::cout << '[' << scope_name_ << "] Elapsed Time : "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count()
-              << " ms" << std::endl;
+              << std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count()
+              << " us" << std::endl;
 }
