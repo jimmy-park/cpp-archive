@@ -18,14 +18,15 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   
 - Design Patterns
   - ~~Singleton~~
-    - <https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton>
+    - [Thread-Safe Initialization of a Singleton](https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton)
   - ~~CRTP~~
-    - <https://stackoverflow.com/questions/4173254/what-is-the-curiously-recurring-template-pattern-crtp/4173298#4173298>
+    - [What is the curiously recurring template pattern (CRTP)?](https://stackoverflow.com/questions/4173254/what-is-the-curiously-recurring-template-pattern-crtp/4173298#4173298)
+    - [The cost of dynamic (virtual calls) vs. static (CRTP) dispatch in C++](https://eli.thegreenplace.net/2013/12/05/the-cost-of-dynamic-virtual-calls-vs-static-crtp-dispatch-in-c)
   - ~~Type Erasure~~
-    - <https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure-with-templates>
-    - <https://mropert.github.io/2017/11/30/polymorphic_ducks/>
-    - <https://mropert.github.io/2017/12/17/better_polymorphic_ducks/>
-    - <http://www.goldsborough.me/cpp/2018/05/22/00-32-43-type_erasure_for_unopinionated_interfaces_in_c++/>
+    - [C++ Core Guidelines: Type Erasure with Templates](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure-with-templates)
+    - [Polymorphic ducks](https://mropert.github.io/2017/11/30/polymorphic_ducks/)
+    - [Better polymorphic ducks](https://mropert.github.io/2017/12/17/better_polymorphic_ducks/)
+    - [Type Erasure for Unopinionated Interfaces in C++](http://www.goldsborough.me/cpp/2018/05/22/00-32-43-type_erasure_for_unopinionated_interfaces_in_c++/)
   - Expression Templates
     - <https://www.modernescpp.com/index.php/expression-templates>
   - State Machine
