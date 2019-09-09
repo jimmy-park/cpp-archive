@@ -98,6 +98,7 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - [GeeksForGeeks](https://www.geeksforgeeks.org/category/cpp/)
   - [Microsoft C++ Team Blog](https://devblogs.microsoft.com/cppblog/)
   - [Sutter's Mill](https://herbsutter.com/)
+  - [Bartek's coding blog](https://www.bfilipek.com/)
 - Online C++ Compiler
   - [Compiler Explorer](https://godbolt.org/)
   - [Quick C++ Benchmark](http://quick-bench.com/)
