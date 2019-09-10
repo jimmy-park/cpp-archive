@@ -51,7 +51,7 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
     - <http://sweeper.egloos.com/3147813>
 - Lambda Expression
   - [That `overloaded` Trick: Overloading Lambdas in C++17](https://dev.to/tmr232/that-overloaded-trick-overloading-lambdas-in-c17)
-- Concurrency and Parallism
+- Concurrency and Parallelism
   - Task-based Parallism (Future, Promise, and std::async)
     - <https://www.modernescpp.com/index.php/tag/tasks>
   - Performance Comparison
