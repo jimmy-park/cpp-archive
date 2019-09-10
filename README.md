@@ -28,11 +28,11 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
     - [Better polymorphic ducks](https://mropert.github.io/2017/12/17/better_polymorphic_ducks/)
     - [Type Erasure for Unopinionated Interfaces in C++](http://www.goldsborough.me/cpp/2018/05/22/00-32-43-type_erasure_for_unopinionated_interfaces_in_c++/)
   - Expression Templates
-    - <https://www.modernescpp.com/index.php/expression-templates>
+    - [Expression Templates](https://www.modernescpp.com/index.php/expression-templates)
   - State Machine
-    - <https://www.youtube.com/watch?v=ojZbFIQSdl8>
-    - <https://khuttun.github.io/2017/02/04/implementing-state-machines-with-std-variant.html>
-    - <https://github.com/boostcon/cppnow_presentations_2019/raw/master/05-07-2019_tuesday/Rise_of_the_State_Machines__Kris_Jusiak__cppnow_05072019.pdf>
+    - [Using Types Effectively](https://www.youtube.com/watch?v=ojZbFIQSdl8)
+    - [Implementing State Machines with std::variant](https://khuttun.github.io/2017/02/04/implementing-state-machines-with-std-variant.html)
+    - [Rise of the State Machine](https://github.com/boostcon/cppnow_presentations_2019/raw/master/05-07-2019_tuesday/Rise_of_the_State_Machines__Kris_Jusiak__cppnow_05072019.pdf)
   - Policy Based Design
 - ~~Logging~~
   - Signal/Exception Handler, Asynchronous I/O, Concurrent Queue, JSON Format
@@ -46,15 +46,14 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - [Visual Leak Detector](https://github.com/KindDragon/vld)
 - Template Metaprogramming
   - SFINAE (+ enable_if, decltype, declval, auto, lambda)
-    - <https://jguegant.github.io/blogs/tech/sfinae-introduction.html>
+    - [An introduction to C++'s SFINAE concept: compile-time introspection of a class member](https://jguegant.github.io/blogs/tech/sfinae-introduction.html)
   - vs. constexpr
     - <http://sweeper.egloos.com/3147813>
 - Lambda Expression
-  - Lambda Overloading
-    - <https://dev.to/tmr232/that-overloaded-trick-overloading-lambdas-in-c17>
-- Task (Future, Promise, and std::async)
-  - <https://www.modernescpp.com/index.php/tag/tasks>
+  - [That `overloaded` Trick: Overloading Lambdas in C++17](https://dev.to/tmr232/that-overloaded-trick-overloading-lambdas-in-c17)
 - Concurrency and Parallism
+  - Task-based Parallism (Future, Promise, and std::async)
+    - <https://www.modernescpp.com/index.php/tag/tasks>
   - Performance Comparison
     - <https://www.modernescpp.com/index.php/my-conclusion-summation-of-a-vector-in-three-variants>
 - Network
