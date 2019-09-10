@@ -89,6 +89,7 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - [Learn C++](https://www.learncpp.com/)
   - [C++ Reference](https://en.cppreference.com/w/)
   - [The C++ Annotations](http://www.icce.rug.nl/documents/cplusplus/)
+  - [Modern C++ Features](https://github.com/AnthonyCalandra/modern-cpp-features)
 - News, Blogs, and Communities
   - [Awesome C++](https://github.com/fffaraz/awesome-cpp)
     - [Awesome Modern C++](https://github.com/rigtorp/awesome-modern-cpp)
