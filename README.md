@@ -17,12 +17,12 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
 ## My Roadmap
   
 - Design Patterns
-  - ~~Singleton~~
+  - Singleton
     - [Thread-Safe Initialization of a Singleton](https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton)
-  - ~~CRTP~~
+  - CRTP
     - [What is the curiously recurring template pattern (CRTP)?](https://stackoverflow.com/questions/4173254/what-is-the-curiously-recurring-template-pattern-crtp/4173298#4173298)
     - [The cost of dynamic (virtual calls) vs. static (CRTP) dispatch in C++](https://eli.thegreenplace.net/2013/12/05/the-cost-of-dynamic-virtual-calls-vs-static-crtp-dispatch-in-c)
-  - ~~Type Erasure~~
+  - Type Erasure
     - [C++ Core Guidelines: Type Erasure with Templates](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure-with-templates)
     - [Polymorphic ducks](https://mropert.github.io/2017/11/30/polymorphic_ducks/)
     - [Better polymorphic ducks](https://mropert.github.io/2017/12/17/better_polymorphic_ducks/)
@@ -49,7 +49,8 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
     - [An introduction to C++'s SFINAE concept: compile-time introspection of a class member](https://jguegant.github.io/blogs/tech/sfinae-introduction.html)
   - vs. constexpr
     - <http://sweeper.egloos.com/3147813>
-- Lambda Expression
+- Template
+  - [How to Use Class Template Argument Deduction](https://devblogs.microsoft.com/cppblog/how-to-use-class-template-argument-deduction/)
   - [That `overloaded` Trick: Overloading Lambdas in C++17](https://dev.to/tmr232/that-overloaded-trick-overloading-lambdas-in-c17)
 - Concurrency and Parallelism
   - Task-based Parallism (Future, Promise, and std::async)
