@@ -82,6 +82,7 @@ From Renaissance to the Modern C++ (For Smoothly Arriving on C++20!)
   - [Effective C++ 3rd Edition](https://www.amazon.com/dp/0321334876/) (Scott Meyers, May 2005)
 - [Professional C++ 4th Edition](https://www.amazon.com/Professional-C-Marc-Gregoire/dp/1119421306/) (Marc Gregoire, April 2018)
 - [C++ Concurrency in Action 2nd Edition](https://www.amazon.com/C-Concurrency-Action-Anthony-Williams/dp/1617294691/ref=sr_1_1?qid=1570010819&refinements=p_27%3AAnthony+Williams&s=books&sr=1-1&text=Anthony+Williams) (Anthony Williams, February 2019)
+- [C++ Templates: The Complete Guide 2nd Edition](https://www.amazon.com/C-Templates-Complete-Guide-2nd/dp/0321714121) (David Vandevoorde, September 2017)
 - [Large-Scale C++ Volume I: Process and Architecture](https://www.amazon.com/Large-Scale-Volume-Architecture-Addison-Wesley-Professional/dp/0201717069) (John Lakos, December 2019)
 
 ## Online Material
